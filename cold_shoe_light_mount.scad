@@ -1,20 +1,37 @@
-// bracket params
+/* [Mounting Bracket] */
+
+// thickness of mounting brackets
 mountBracketThickness = 2.24;
-mountWidth = 18;
+
+// should there be a top clamp
+hasTopClamp = true;
+
+// gap between top and bottom brackets
 gapDistance = 1.5;
 
-// post params
-clearance = 18; // how high from the top of the cold shoe will the base of the light be
+/* [Flashlight Params] */
+// how much clearance does the light need
+clearance = 18;
 
-// clamp params
-flashlightRadius = 13;
+// diameter of flashlight
+flashlightDiameter = 15;
+
+// how much smaller should the ring be than the light
+clampTightness = 2;
+
+// how deep is the clamp
 clampDepth = 9.5;
+
+// how thick is the clamp
 clampThickness = 1.5;
 
+/* [Hidden ] */
+mountWidth = 18;
 
-ringRadius = flashlightRadius + clampThickness;
+clampRadius = (flashlightDiameter - clampTightness) / 2;
+ringRadius = clampRadius + clampThickness;
 totalColumnLength = gapDistance + mountBracketThickness + clearance;
-clampGapWidth = flashlightRadius * 2 * .625;
+clampGapWidth = clampRadius * 2 * .625;
 
 difference() {
     // solid part
@@ -23,8 +40,9 @@ difference() {
         cube([mountBracketThickness, mountWidth, mountWidth]);
 
         // clamp for coldshoe to hold fast
-        translate([gapDistance + mountBracketThickness, 0, 0])
-            cube([mountBracketThickness, mountWidth, mountWidth]);
+        if (hasTopClamp)
+            translate([gapDistance + mountBracketThickness, 0, 0])
+                cube([mountBracketThickness, mountWidth, mountWidth]);
 
         // post
         translate([0, (mountWidth - 6) / 2, 0])
@@ -40,15 +58,15 @@ difference() {
         };
 
         // clamp
-        translate([totalColumnLength + flashlightRadius, mountWidth / 2, 0])
+        translate([totalColumnLength + clampRadius, mountWidth / 2, 0])
             color("blue") cylinder(h = clampDepth, r = ringRadius, $fn=60);
     }
     
     // hole
-    translate([totalColumnLength + flashlightRadius, mountWidth / 2, 0])
-        color("green") cylinder(h = clampDepth, r = flashlightRadius, $fn=60);    
+    translate([totalColumnLength + clampRadius, mountWidth / 2, 0])
+        color("green") cylinder(h = clampDepth, r = clampRadius, $fn=60);    
 
     // flashlight gap
-    translate([totalColumnLength + flashlightRadius, (mountWidth - clampGapWidth) / 2, 0])
+    translate([totalColumnLength + clampRadius, (mountWidth - clampGapWidth) / 2, 0])
         cube([ringRadius, clampGapWidth, clampDepth]);
 }
