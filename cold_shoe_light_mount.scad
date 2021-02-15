@@ -51,7 +51,7 @@ difference() {
 
         // post
         translate([0, (mountWidth - 6) / 2, 0])
-            color("green") cube([totalColumnLength, 6, clampDepth]);
+            color("green") cube([ringCenter, 6, clampDepth]);
                     
         color("red") hull() {
             // post support
@@ -64,17 +64,24 @@ difference() {
 
         // clamp
         translate([ringCenter, mountWidth / 2, 0])
-            color("blue") cylinder(h = clampDepth, r = ringRadius, $fn=60);
+            color("blue") cylinder(h = clampDepth, r = ringRadius, $fn = 60);
     }
     
     // hole
     translate([ringCenter, mountWidth / 2, 0])
-        cylinder(h = clampDepth, r = clampRadius, $fn=60);    
+        cylinder(h = clampDepth, r = clampRadius, $fn = 60);    
 
     // flashlight gap
     translate([ringCenter, mountWidth / 2, 0])
         linear_extrude(height = clampDepth, convexity = 10) {
             verticalOffset = tan(clampGapAngle / 2) * ringRadius;
             polygon(points=[[0,0], [ringRadius,verticalOffset], [ringRadius,-verticalOffset]]);
-        }
+        };
+};
+
+for (side = [-1, 1]) {
+    translate([ringCenter, mountWidth / 2, 0])
+        rotate([0, 0, clampGapAngle / 2 * side])
+            translate([(ringRadius + clampRadius) / 2, 0, 0])
+                color("cyan") cylinder(h = clampDepth, r = clampThickness / 2, $fn = 60);
 };
