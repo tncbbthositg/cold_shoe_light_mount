@@ -3,11 +3,11 @@
 // thickness of mounting brackets
 mountBracketThickness = 2.24;
 
-// should there be a top clamp
+// should there be a top clamp?
 hasTopClamp = true;
 
-// gap between top and bottom brackets
-gapDistance = 1.5;
+// gap between top and bottom mounting brackets
+mountGapDistance = 1.5;
 
 /* [Flashlight Params] */
 // how much clearance does the light need
@@ -35,7 +35,7 @@ mountWidth = 18;
 // computed values
 clampRadius = (flashlightDiameter - clampTightness) / 2;
 ringRadius = clampRadius + clampThickness;
-totalColumnLength = gapDistance + mountBracketThickness + clearance;
+totalColumnLength = mountGapDistance + mountBracketThickness + clearance;
 ringCenter = totalColumnLength + clampRadius;
 
 difference() {
@@ -46,7 +46,7 @@ difference() {
 
         // clamp for coldshoe to hold fast
         if (hasTopClamp)
-            translate([gapDistance + mountBracketThickness, 0, 0])
+            translate([mountGapDistance + mountBracketThickness, 0, 0])
                 cube([mountBracketThickness, mountWidth, mountWidth]);
 
         // post
@@ -56,7 +56,7 @@ difference() {
         color("red") hull() {
             // post support
             translate([0, (mountWidth - 10) / 2, 0])
-                cube([gapDistance + mountBracketThickness * 2 + 3, 10, 13]);
+                cube([mountGapDistance + mountBracketThickness * 2 + 3, 10, 13]);
 
             translate([0, (mountWidth - 6) / 2, 0])
                 cube([totalColumnLength - 4.3, 6, clampDepth]);
