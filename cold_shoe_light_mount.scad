@@ -25,13 +25,18 @@ clampDepth = 9.5;
 // how thick is the clamp
 clampThickness = 1.5;
 
+// what angle should the clamp gap be cut at
+clampGapAngle = 120; // [10:170]
+
 /* [Hidden ] */
+// the width of the mounting bracket
 mountWidth = 18;
 
+// computed values
 clampRadius = (flashlightDiameter - clampTightness) / 2;
 ringRadius = clampRadius + clampThickness;
 totalColumnLength = gapDistance + mountBracketThickness + clearance;
-clampGapWidth = clampRadius * 2 * .625;
+ringCenter = totalColumnLength + clampRadius;
 
 difference() {
     // solid part
@@ -46,9 +51,9 @@ difference() {
 
         // post
         translate([0, (mountWidth - 6) / 2, 0])
-            cube([totalColumnLength, 6, clampDepth]);
+            color("green") cube([totalColumnLength, 6, clampDepth]);
                     
-        hull() {
+        color("red") hull() {
             // post support
             translate([0, (mountWidth - 10) / 2, 0])
                 cube([gapDistance + mountBracketThickness * 2 + 3, 10, 13]);
@@ -58,15 +63,18 @@ difference() {
         };
 
         // clamp
-        translate([totalColumnLength + clampRadius, mountWidth / 2, 0])
+        translate([ringCenter, mountWidth / 2, 0])
             color("blue") cylinder(h = clampDepth, r = ringRadius, $fn=60);
     }
     
     // hole
-    translate([totalColumnLength + clampRadius, mountWidth / 2, 0])
-        color("green") cylinder(h = clampDepth, r = clampRadius, $fn=60);    
+    translate([ringCenter, mountWidth / 2, 0])
+        cylinder(h = clampDepth, r = clampRadius, $fn=60);    
 
     // flashlight gap
-    translate([totalColumnLength + clampRadius, (mountWidth - clampGapWidth) / 2, 0])
-        cube([ringRadius, clampGapWidth, clampDepth]);
-}
+    translate([ringCenter, mountWidth / 2, 0])
+        linear_extrude(height = clampDepth, convexity = 10) {
+            verticalOffset = tan(clampGapAngle / 2) * ringRadius;
+            polygon(points=[[0,0], [ringRadius,verticalOffset], [ringRadius,-verticalOffset]]);
+        }
+};
