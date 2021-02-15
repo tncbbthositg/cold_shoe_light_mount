@@ -73,7 +73,7 @@ difference() {
 
     // flashlight gap
     translate([ringCenter, mountWidth / 2, 0])
-        linear_extrude(height = clampDepth, convexity = 10) {
+        linear_extrude(height = clampDepth) {
             verticalOffset = tan(clampGapAngle / 2) * ringRadius;
             polygon(points=[[0,0], [ringRadius,verticalOffset], [ringRadius,-verticalOffset]]);
         };
