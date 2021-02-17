@@ -28,9 +28,18 @@ clampThickness = 1.5;
 // what angle should the clamp gap be cut at
 clampGapAngle = 120; // [10:170]
 
-/* [Hidden ] */
+/* [Print Settings] */
+
+// smoother renders slower
+quality = 8; //[2:Draft, 4:Medium, 8:Fine, 16:Ultra Fine]
+
+/* [Hidden] */
 // the width of the mounting bracket
 mountWidth = 18;
+
+// print quality settings
+$fa = 12/quality;
+$fs = 2/quality;
 
 // computed values
 clampRadius = (flashlightDiameter - clampTightness) / 2;
@@ -64,12 +73,12 @@ difference() {
 
         // clamp
         translate([ringCenter, mountWidth / 2, 0])
-            color("blue") cylinder(h = clampDepth, r = ringRadius, $fn = 60);
+            color("blue") cylinder(h = clampDepth, r = ringRadius);
     }
     
     // hole
     translate([ringCenter, mountWidth / 2, 0])
-        cylinder(h = clampDepth, r = clampRadius, $fn = 60);    
+        cylinder(h = clampDepth, r = clampRadius);    
 
     // flashlight gap
     translate([ringCenter, mountWidth / 2, 0])
@@ -79,9 +88,10 @@ difference() {
         };
 };
 
+// round clamp ends
 for (side = [-1, 1]) {
     translate([ringCenter, mountWidth / 2, 0])
         rotate([0, 0, clampGapAngle / 2 * side])
             translate([(ringRadius + clampRadius) / 2, 0, 0])
-                color("cyan") cylinder(h = clampDepth, r = clampThickness / 2, $fn = 60);
+                color("cyan") cylinder(h = clampDepth, r = clampThickness / 2);
 };
